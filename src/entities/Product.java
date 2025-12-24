@@ -17,7 +17,7 @@ public class Product {
 
     //ürün sınıfının get ve set metodlarını yazıyoruz
     //encapsulation yapıyoruz
-    public String getName() { return name; }
+    public String getId() { return id; }
     public void setName(String name) { this.name = name; }
 
     public int getStockQuantity() { return stockQuantity; }
@@ -29,4 +29,5 @@ public class Product {
 
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+    public String getName() { return name; }
 }
