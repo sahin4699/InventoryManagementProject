@@ -64,4 +64,22 @@ public class StockManager implements IStockService{
             System.out.println("Tüm stoklar güvenli seviyede.");
         }
     }
+    @Override
+    public void autoRestock(String productId, int threshold, int amount) {
+        Product product = findProduct(productId);
+
+        if (product != null) {
+            // 2. Stok kontrolü yap
+            if (product.getStockQuantity() < threshold) {
+                int newQuantity = product.getStockQuantity() + amount;
+                product.setStockQuantity(newQuantity);
+                System.out.println(product.getName() + " stoğu azaldı. Otomatik olarak " + amount + " adet eklendi.");
+                System.out.println("Yeni Stok: " + newQuantity);
+            } else {
+                System.out.println("Stok yeterli, yenilemeye gerek yok.");
+            }
+        } else {
+            System.out.println("Ürün bulunamadı!");
+        }
+    }
 }

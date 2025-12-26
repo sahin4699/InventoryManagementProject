@@ -12,4 +12,6 @@ public interface IStockService {
     Product findProduct(String productId);
 
     void checkLowStock(int threshold);
+    void autoRestock(String productId, int threshold, int amount);
 }
+
