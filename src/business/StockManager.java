@@ -83,24 +83,48 @@ public class StockManager implements IStockService{
         }
     }
 
+
     @Override
     public double getAveragePrice() {
-        return 0;
+        double total = 0;
+        for (Product p : inventory.getProducts()) {
+            total += p.getPrice();
+        }
+        return inventory.getProducts().isEmpty() ? 0 : total / inventory.getProducts().size();
     }
 
     @Override
     public Product getMostExpensiveProduct() {
-        return null;
+        if (inventory.getProducts().isEmpty()) return null;
+
+        Product max = inventory.getProducts().get(0);
+        for (Product p : inventory.getProducts()) {
+            if (p.getPrice() > max.getPrice()) {
+                max = p;
+            }
+        }
+        return max;
     }
 
     @Override
     public Product getCheapestProduct() {
-        return null;
+        if (inventory.getProducts().isEmpty()) return null;
+
+        Product min = inventory.getProducts().get(0);
+        for (Product p : inventory.getProducts()) {
+            if (p.getPrice() < min.getPrice()) {
+                min = p;
+            }
+        }
+        return min;
     }
 
     @Override
     public double getTotalInventoryValue() {
-        return 0;
+        double totalValue = 0;
+        for (Product p : inventory.getProducts()) {
+            totalValue += p.getPrice() * p.getStockQuantity();
+        }
+        return totalValue;
     }
-
 }

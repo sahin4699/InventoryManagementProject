@@ -10,6 +10,7 @@ public class Main {
 
         Product p1 = new Product("P001", "Gaming Laptop", 25500.0, 15);
         Product p2 = new Product("P002", "Kablosuz Mouse", 450.0, 5);
+        Product p3= new Product("P003","Bluetooth Kulaklık",3500,10);
 
         stockManager.addProduct(p1);
         stockManager.addProduct(p2);
