@@ -3,6 +3,7 @@ package business;
 import entities.Product;
 
 public interface IStockService {
+
     void addProduct(Product product);
 
     void removeProduct(String productId);
@@ -12,6 +13,14 @@ public interface IStockService {
     Product findProduct(String productId);
 
     void checkLowStock(int threshold);
-    void autoRestock(String productId, int threshold, int amount);
-}
 
+    void autoRestock(String productId, int threshold, int amount);
+
+    double getAveragePrice();
+
+    Product getMostExpensiveProduct();
+
+    Product getCheapestProduct();
+
+    double getTotalInventoryValue();
+}

@@ -82,4 +82,25 @@ public class StockManager implements IStockService{
             System.out.println("Ürün bulunamadı!");
         }
     }
+
+    @Override
+    public double getAveragePrice() {
+        return 0;
+    }
+
+    @Override
+    public Product getMostExpensiveProduct() {
+        return null;
+    }
+
+    @Override
+    public Product getCheapestProduct() {
+        return null;
+    }
+
+    @Override
+    public double getTotalInventoryValue() {
+        return 0;
+    }
+
 }
