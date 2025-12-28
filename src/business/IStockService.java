@@ -23,4 +23,5 @@ public interface IStockService {
     Product getCheapestProduct();
 
     double getTotalInventoryValue();
+    void saveToFile();
 }

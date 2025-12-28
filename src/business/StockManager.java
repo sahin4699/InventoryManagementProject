@@ -127,4 +127,7 @@ public class StockManager implements IStockService{
         }
         return totalValue;
     }
+    @Override
+    public void saveToFile() {
+    }
 }
