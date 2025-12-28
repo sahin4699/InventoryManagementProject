@@ -1,0 +1,3 @@
+P001,Gaming Laptop,25500.0,14
+P002,Kablosuz Mouse,450.0,25
+P003,Bluetooth Kulaklık,3500.0,10
