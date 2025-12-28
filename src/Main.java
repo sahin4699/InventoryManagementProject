@@ -22,5 +22,29 @@ public class Main {
         if(found != null) {
             System.out.println("Bulunan Ürün: " + found.getName());
         }
+
+        // Üçüncü ürünü ekle
+        stockManager.addProduct(p3);
+
+        // Otomatik stok yenileme testi
+        stockManager.autoRestock("P002", 10, 20);
+
+        // Fiyat analizleri
+        System.out.println("Ortalama Fiyat: " + stockManager.getAveragePrice());
+
+        Product expensive = stockManager.getMostExpensiveProduct();
+        if (expensive != null) {
+            System.out.println("En Pahalı Ürün: " + expensive.getName());
+        }
+
+        Product cheap = stockManager.getCheapestProduct();
+        if (cheap != null) {
+            System.out.println("En Ucuz Ürün: " + cheap.getName());
+        }
+
+        System.out.println("Toplam Envanter Değeri: " + stockManager.getTotalInventoryValue());
+
+        // Dosyaya kayıt testi
+        stockManager.saveToFile();
     }
 }

@@ -2,14 +2,16 @@ package business;
 import entities.Inventory;
 import entities.Product;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class StockManager implements IStockService{
     private Inventory inventory;
-
 
     public StockManager(Inventory inventory) {
         this.inventory = inventory;
     }
-
 
     @Override
     public void addProduct(Product product) {
@@ -64,12 +66,12 @@ public class StockManager implements IStockService{
             System.out.println("Tüm stoklar güvenli seviyede.");
         }
     }
+
     @Override
     public void autoRestock(String productId, int threshold, int amount) {
         Product product = findProduct(productId);
 
         if (product != null) {
-            // 2. Stok kontrolü yap
             if (product.getStockQuantity() < threshold) {
                 int newQuantity = product.getStockQuantity() + amount;
                 product.setStockQuantity(newQuantity);
@@ -82,7 +84,6 @@ public class StockManager implements IStockService{
             System.out.println("Ürün bulunamadı!");
         }
     }
-
 
     @Override
     public double getAveragePrice() {
@@ -127,7 +128,25 @@ public class StockManager implements IStockService{
         }
         return totalValue;
     }
+
     @Override
     public void saveToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("inventory.txt"))) {
+
+            for (Product p : inventory.getProducts()) {
+                writer.write(
+                        p.getId() + "," +
+                                p.getName() + "," +
+                                p.getPrice() + "," +
+                                p.getStockQuantity()
+                );
+                writer.newLine();
+            }
+
+            System.out.println("[INFO] Envanter dosyaya başarıyla kaydedildi.");
+
+        } catch (IOException e) {
+            System.out.println("[ERROR] Dosya yazma hatası!");
+        }
     }
 }
