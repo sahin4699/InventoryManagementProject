@@ -24,4 +24,5 @@ public interface IStockService {
 
     double getTotalInventoryValue();
     void saveToFile();
+    void loadFromFile();
 }

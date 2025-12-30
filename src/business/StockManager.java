@@ -149,4 +149,9 @@ public class StockManager implements IStockService{
             System.out.println("[ERROR] Dosya yazma hatası!");
         }
     }
+
+    @Override
+    public void loadFromFile() {
+
+    }
 }
