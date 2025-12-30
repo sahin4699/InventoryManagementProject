@@ -15,9 +15,16 @@ public class StockManager implements IStockService{
 
     @Override
     public void addProduct(Product product) {
+
+        if (findProduct(product.getId()) != null) {
+            System.out.println("[ERROR] Aynı ID ile ürün zaten mevcut: " + product.getId());
+            return;
+        }
+
         inventory.getProducts().add(product);
         System.out.println("[INFO] Ürün eklendi: " + product.getName());
     }
+
 
     @Override
     public void removeProduct(String productId) {
