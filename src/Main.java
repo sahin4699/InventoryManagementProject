@@ -44,7 +44,7 @@ public class Main {
 
         System.out.println("Toplam Envanter Değeri: " + stockManager.getTotalInventoryValue());
 
-        // Dosyaya kayıt testi
+
         stockManager.saveToFile();
     }
 }

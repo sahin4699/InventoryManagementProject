@@ -152,6 +152,32 @@ public class StockManager implements IStockService{
 
     @Override
     public void loadFromFile() {
+        inventory.getProducts().clear();
 
+        try (java.io.BufferedReader reader =
+                     new java.io.BufferedReader(new java.io.FileReader("inventory.txt"))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+
+                if (parts.length == 4) {
+                    String id = parts[0];
+                    String name = parts[1];
+                    double price = Double.parseDouble(parts[2]);
+                    int stock = Integer.parseInt(parts[3]);
+
+                    Product product = new Product(id, name, price, stock);
+                    inventory.getProducts().add(product);
+                }
+            }
+
+            System.out.println("[INFO] Envanter dosyadan başarıyla yüklendi.");
+
+        } catch (IOException e) {
+            System.out.println("[ERROR] Dosya okuma hatası!");
+        }
     }
 }
+
+
