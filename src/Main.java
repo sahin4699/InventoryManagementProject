@@ -20,7 +20,7 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(
                 new Thread(() -> {
                     stockManager.saveToFile();
-                    System.out.println("[INFO] Program kapatılırken veriler kaydedildi");
+                    System.out.println("[INFO] Program kapatılırken veriler kaydedildi.");
                 })
         );
 
