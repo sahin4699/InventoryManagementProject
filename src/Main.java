@@ -3,48 +3,141 @@ import business.StockManager;
 import entities.Inventory;
 import entities.Product;
 
+import java.util.Scanner;
+
 public class Main {
+
     public static void main(String[] args) {
-        Inventory myInventory = new Inventory();
-        IStockService stockManager = new StockManager(myInventory);
 
-        Product p1 = new Product("P001", "Gaming Laptop", 25500.0, 15);
-        Product p2 = new Product("P002", "Kablosuz Mouse", 450.0, 5);
-        Product p3= new Product("P003","Bluetooth Kulaklık",3500,10);
+        Inventory inventory = new Inventory();
+        IStockService stockManager = new StockManager(inventory);
+        Scanner scanner = new Scanner(System.in);
 
-        stockManager.addProduct(p1);
-        stockManager.addProduct(p2);
+        // Program açılışında dosyadan yükle
+        stockManager.loadFromFile();
 
-        stockManager.updateStock("P001", 14);
-        stockManager.checkLowStock(10);
-
-        Product found = stockManager.findProduct("P002");
-        if(found != null) {
-            System.out.println("Bulunan Ürün: " + found.getName());
-        }
-
-        // Üçüncü ürünü ekle
-        stockManager.addProduct(p3);
-
-        // Otomatik stok yenileme testi
-        stockManager.autoRestock("P002", 10, 20);
-
-        // Fiyat analizleri
-        System.out.println("Ortalama Fiyat: " + stockManager.getAveragePrice());
-
-        Product expensive = stockManager.getMostExpensiveProduct();
-        if (expensive != null) {
-            System.out.println("En Pahalı Ürün: " + expensive.getName());
-        }
-
-        Product cheap = stockManager.getCheapestProduct();
-        if (cheap != null) {
-            System.out.println("En Ucuz Ürün: " + cheap.getName());
-        }
-
-        System.out.println("Toplam Envanter Değeri: " + stockManager.getTotalInventoryValue());
+        // Program beklenmedik şekilde kapanırsa da veriyi kaydet
+        Runtime.getRuntime().addShutdownHook(
+                new Thread(() -> {
+                    stockManager.saveToFile();
+                    System.out.println("[INFO] Program kapatılırken veriler kaydedildi");
+                })
+        );
 
 
-        stockManager.saveToFile();
+        int choice;
+
+        do {
+            System.out.println();
+            System.out.println("╔══════════════════════════════════════╗");
+            System.out.println("║        ENVANTER YÖNETİM SİSTEMİ       ║");
+            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("║ 1 │ Ürün Ekle                         ║");
+            System.out.println("║ 2 │ Ürün Sil                          ║");
+            System.out.println("║ 3 │ Stok Güncelle                     ║");
+            System.out.println("║ 4 │ Kritik Stok Kontrolü              ║");
+            System.out.println("║ 5 │ Ortalama Ürün Fiyatı              ║");
+            System.out.println("║ 6 │ En Pahalı Ürün                    ║");
+            System.out.println("║ 7 │ En Ucuz Ürün                      ║");
+            System.out.println("║ 8 │ Toplam Envanter Değeri            ║");
+            System.out.println("║ 9 │ Otomatik Stok Yenileme            ║");
+            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("║ 0 │ Çıkış ve Kaydet                   ║");
+            System.out.println("╚══════════════════════════════════════╝");
+            System.out.print("Seçiminiz: ");
+
+
+            choice = scanner.nextInt();
+            scanner.nextLine(); // buffer temizleme
+
+            switch (choice) {
+
+                case 1:
+                    System.out.print("Ürün ID: ");
+                    String id = scanner.nextLine();
+
+                    System.out.print("Ürün Adı: ");
+                    String name = scanner.nextLine();
+
+                    System.out.print("Fiyat: ");
+                    double price = scanner.nextDouble();
+
+                    System.out.print("Stok Adedi: ");
+                    int stock = scanner.nextInt();
+
+                    stockManager.addProduct(new Product(id, name, price, stock));
+                    break;
+
+                case 2:
+                    System.out.print("Silinecek Ürün ID: ");
+                    String removeId = scanner.nextLine();
+                    stockManager.removeProduct(removeId);
+                    break;
+
+                case 3:
+                    System.out.print("Ürün ID: ");
+                    String updateId = scanner.nextLine();
+
+                    System.out.print("Yeni Stok Miktarı: ");
+                    int newStock = scanner.nextInt();
+
+                    stockManager.updateStock(updateId, newStock);
+                    break;
+
+                case 4:
+                    System.out.print("Kritik stok eşiği: ");
+                    int threshold = scanner.nextInt();
+                    stockManager.checkLowStock(threshold);
+                    break;
+
+                case 5:
+                    System.out.println("Ortalama Ürün Fiyatı: " + stockManager.getAveragePrice());
+                    break;
+
+                case 6:
+                    Product max = stockManager.getMostExpensiveProduct();
+                    if (max != null)
+                        System.out.println("En pahalı ürün: " + max.getName() + " - " + max.getPrice());
+                    else
+                        System.out.println("Ürün yok.");
+                    break;
+
+                case 7:
+                    Product min = stockManager.getCheapestProduct();
+                    if (min != null)
+                        System.out.println("En ucuz ürün: " + min.getName() + " - " + min.getPrice());
+                    else
+                        System.out.println("Ürün yok.");
+                    break;
+
+                case 8:
+                    System.out.println("Toplam Envanter Değeri: " + stockManager.getTotalInventoryValue());
+                    break;
+
+                case 9:
+                    System.out.print("Ürün ID: ");
+                    String autoId = scanner.nextLine();
+
+                    System.out.print("Eşik değer: ");
+                    int autoThreshold = scanner.nextInt();
+
+                    System.out.print("Eklenecek miktar: ");
+                    int amount = scanner.nextInt();
+
+                    stockManager.autoRestock(autoId, autoThreshold, amount);
+                    break;
+
+                case 0:
+                    stockManager.saveToFile();
+                    System.out.println("Çıkış yapıldı. Veriler kaydedildi.");
+                    break;
+
+                default:
+                    System.out.println("Geçersiz seçim!");
+            }
+
+        } while (choice != 0);
+
+        scanner.close();
     }
 }
