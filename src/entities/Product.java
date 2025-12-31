@@ -1,18 +1,22 @@
 package entities;
 
+import entities.Supplier;
+
+
 public class Product {
     //ürüne ait özellikler
     private String id;
     private String name;
     private double price;
     private int stockQuantity;
-
+private Supplier supplier;
     //ürüne ait özelliklerin değerleri,parametreler
-    public Product(String id, String name, double price, int stockQuantity) {
+    public Product(String id, String name, double price, int stockQuantity,Supplier supplier) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
+        this.supplier=supplier;
     }
 
     //ürün sınıfının get ve set metodlarını yazıyoruz
@@ -30,4 +34,8 @@ public class Product {
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
     public String getName() { return name; }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
 }
