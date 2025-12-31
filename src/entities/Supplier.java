@@ -19,5 +19,9 @@ public class Supplier {
 
     public String getContactEmail() { return contactEmail; }
     public void setContactEmail(String contactEmail) { this.contactEmail = contactEmail; }
+
+    public String getSupplierId() {
+        return supplierId;
+    }
 }
 
