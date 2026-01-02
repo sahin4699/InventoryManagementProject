@@ -1,6 +1,7 @@
 package business;
 import entities.Inventory;
 import entities.Product;
+import entities.Supplier
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -185,6 +186,32 @@ public class StockManager implements IStockService{
             System.out.println("[ERROR] Dosya okuma hatası!");
         }
     }
+
+    public void addSupplier(Supplier supplier) {
+        for (Supplier p : inventory.getSuppliers()) {
+            if (p.getSupplierId().equals(supplier.getSupplierId())) {
+                System.out.println("[ERROR] Aynı ID ile tedarikçi zaten mevcut." + supplier.getSupplierId());
+            return;
+            }
+        }
+
+        inventory.getSuppliers().add(supplier);
+        System.out.println("[İNFO] Tedarikçi eklendi."+ supplier.getSupplierId());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
