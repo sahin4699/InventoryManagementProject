@@ -4,11 +4,18 @@ import entities.Product;
 import entities.Supplier;
 import entities.Order;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+
+
 
 public class StockManager implements IStockService{
+
+    private static final String PRODUCTS_FILE = "products.txt";
+    private static final String SUPPLIERS_FILE = "suppliers.txt";
+
+
+
+
     private Inventory inventory;
 
     public StockManager(Inventory inventory) {
@@ -140,53 +147,17 @@ public class StockManager implements IStockService{
 
     @Override
     public void saveToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("inventory.txt"))) {
-
-            for (Product p : inventory.getProducts()) {
-                writer.write(
-                        p.getId() + "," +
-                                p.getName() + "," +
-                                p.getPrice() + "," +
-                                p.getStockQuantity()
-                );
-                writer.newLine();
-            }
-
-            System.out.println("[INFO] Envanter dosyaya başarıyla kaydedildi.");
-
-        } catch (IOException e) {
-            System.out.println("[ERROR] Dosya yazma hatası!");
-        }
+        saveSuppliersToFile();
+        saveProductsToFile();
     }
+
 
     @Override
     public void loadFromFile() {
-        inventory.getProducts().clear();
-
-        try (java.io.BufferedReader reader =
-                     new java.io.BufferedReader(new java.io.FileReader("inventory.txt"))) {
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-
-                if (parts.length == 4) {
-                    String id = parts[0];
-                    String name = parts[1];
-                    double price = Double.parseDouble(parts[2]);
-                    int stock = Integer.parseInt(parts[3]);
-
-                    Product product = new Product(id, name, price, stock);
-                    inventory.getProducts().add(product);
-                }
-            }
-
-            System.out.println("[INFO] Envanter dosyadan başarıyla yüklendi.");
-
-        } catch (IOException e) {
-            System.out.println("[ERROR] Dosya okuma hatası!");
-        }
+        loadSuppliersFromFile();  // önce tedarikçiler
+        loadProductsFromFile();   // sonra ürünler
     }
+
 
     public void addSupplier(Supplier supplier) {
         for (Supplier p : inventory.getSuppliers()) {
@@ -216,13 +187,102 @@ public void createOrder(Order order){
 
         if(product.getStockQuantity() >= quantity){
             product.setStockQuantity(product.getStockQuantity() - quantity);
-            System.out.println("[INFO] Sipariş oluşturuldu. Ürün: "+ product.getName()+ " Miktar: +"+ quantity +" Kalan stok: "+product.getStockQuantity());
+            System.out.println("[INFO] Sipariş oluşturuldu. Ürün: "+ product.getName()+ " Miktar: "+ quantity +" Kalan stok: "+product.getStockQuantity());
         }
         else {
             System.out.println("[ERROR] Yetersiz stok! Sipariş oluşturulamadı.");
         }
 
 }
+
+public void saveSuppliersToFile(){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(SUPPLIERS_FILE))){
+            for (Supplier p : inventory.getSuppliers()) {
+                writer.write(
+                        p.getSupplierId()+ "," + p.getCompanyName() + "," + p.getContactEmail());
+            writer.newLine();
+            }
+ System.out.println("[İNFO] Tedarikçiler dosyaya kaydedildi.");
+        }
+        catch (IOException e) {
+            System.out.println("[ERROR] Tedarikçi dosyas yazılamadı!!");
+        }
+}
+
+    public void saveProductsToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(PRODUCTS_FILE))) {
+
+            for (Product p : inventory.getProducts()) {
+
+                String supplierId = (p.getSupplier() != null)
+                        ? p.getSupplier().getSupplierId()
+                        : "";
+
+                writer.write(
+                        p.getId() + "," +
+                                p.getName() + "," +
+                                p.getPrice() + "," +
+                                p.getStockQuantity() + "," +
+                                supplierId
+                );
+                writer.newLine();
+            }
+
+            System.out.println("[INFO] Ürünler dosyaya kaydedildi.");
+
+        } catch (IOException e) {
+            System.out.println("[ERROR] Ürün dosyası yazılamadı!");
+        }
+    }
+
+    public void loadProductsFromFile() {
+        inventory.getProducts().clear();
+        try(BufferedReader reader = new BufferedReader(new FileReader(PRODUCTS_FILE))) {
+
+            String line;
+            while((line=reader.readLine()) !=null){
+                String[] p = line.split(",");
+
+                if (p.length == 5) {
+                    String id = p[0];
+                    String name = p[1];
+                    double price = Double.parseDouble(p[2]);
+                    int stockQuantity = Integer.parseInt(p[3]);
+                    String supplierId = p[4];
+
+                    Supplier supplier= findSupplier(supplierId);
+                    Product product = new Product(id, name, price, stockQuantity, supplier);
+                    inventory.getProducts().add(product);
+
+                }
+
+            }
+            System.out.println("[İNFO] Ürünler dosyayadan yüklendi.");
+
+        }catch (IOException e){
+            System.out.println("[WARN] Ürün dosyası okunamadı.");
+        }
+    }
+
+    public void loadSuppliersFromFile() {
+        inventory.getSuppliers().clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(SUPPLIERS_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] p = line.split(",");
+                if (p.length == 3) {
+                    inventory.getSuppliers().add(
+                            new Supplier(p[0], p[1], p[2])
+                    );
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("[WARN] Tedarikçi dosyası okunamadı.");
+        }
+    }
+
+
 }
 
 
