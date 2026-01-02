@@ -199,8 +199,14 @@ public class StockManager implements IStockService{
         System.out.println("[İNFO] Tedarikçi eklendi."+ supplier.getSupplierId());
     }
 
-
-
+    public Supplier findSupplier(String supplierId) {
+        for (Supplier p : inventory.getSuppliers()) {
+            if (p.getSupplierId().equals(supplierId)) {
+                return p;
+            }
+        }
+        return null;
+    }
 
 
 
