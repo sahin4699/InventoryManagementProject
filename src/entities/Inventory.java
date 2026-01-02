@@ -6,10 +6,12 @@ import java.util.List;
 public class Inventory {
     //ürünlerden oluşan envanterimiz
     private List<Product> products;
+    private List<Supplier> suppliers;
 
     //constructor ile boş bir dizi dönüyoruz
     public Inventory(){
         this.products = new ArrayList<>();
+        this.suppliers=new ArrayList<>();
     }
 
     //envantere ait getter ve setterlar
@@ -20,4 +22,13 @@ public class Inventory {
     public void setProducts(List<Product> products){
         this.products = products;
     }
+
+    public List<Supplier> getSuppliers(){
+        return  suppliers;
+    }
+
+
+
+
+
 }
