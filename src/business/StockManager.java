@@ -1,7 +1,8 @@
 package business;
 import entities.Inventory;
 import entities.Product;
-import entities.Supplier
+import entities.Supplier;
+import entities.Order;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -208,16 +209,20 @@ public class StockManager implements IStockService{
         return null;
     }
 
+public void createOrder(Order order){
+        Product product = order.getProduct();
+        int quantity = order.getQuantity();
 
 
+        if(product.getStockQuantity() >= quantity){
+            product.setStockQuantity(product.getStockQuantity() - quantity);
+            System.out.println("[INFO] Sipariş oluşturuldu. Ürün: "+ product.getName()+ " Miktar: +"+ quantity +" Kalan stok: "+product.getStockQuantity());
+        }
+        else {
+            System.out.println("[ERROR] Yetersiz stok! Sipariş oluşturulamadı.");
+        }
 
-
-
-
-
-
-
-
+}
 }
 
 
