@@ -6,19 +6,17 @@ import entities.Order;
 
 import java.io.*;
 import java.util.Comparator;
-
-
-
+import java.util.List;       // EKLENDİ
+import java.util.ArrayList; // EKLENDİ
 
 public class StockManager implements IStockService{
 
     private static final String PRODUCTS_FILE = "products.txt";
     private static final String SUPPLIERS_FILE = "suppliers.txt";
-
-
-
+    private static final String ORDERS_FILE = "orders.txt";
 
     private Inventory inventory;
+    private List<Order> orders = new ArrayList<>();
 
     public StockManager(Inventory inventory) {
         this.inventory = inventory;
@@ -35,7 +33,6 @@ public class StockManager implements IStockService{
         inventory.getProducts().add(product);
         System.out.println("[INFO] Ürün eklendi: " + product.getName());
     }
-
 
     @Override
     public void removeProduct(String productId) {
@@ -76,7 +73,6 @@ public class StockManager implements IStockService{
         }
         return null;
     }
-
 
     @Override
     public void checkLowStock(int threshold) {
@@ -159,21 +155,21 @@ public class StockManager implements IStockService{
     public void saveToFile() {
         saveSuppliersToFile();
         saveProductsToFile();
+        saveOrdersToFile();
     }
-
 
     @Override
     public void loadFromFile() {
         loadSuppliersFromFile();  // önce tedarikçiler
-        loadProductsFromFile();   // sonra ürünler
+        loadProductsFromFile();// sonra ürünler
+        loadOrdersFromFile();
     }
-
 
     public void addSupplier(Supplier supplier) {
         for (Supplier p : inventory.getSuppliers()) {
             if (p.getSupplierId().equals(supplier.getSupplierId())) {
                 System.out.println("[ERROR] Aynı ID ile tedarikçi zaten mevcut." + supplier.getSupplierId());
-            return;
+                return;
             }
         }
 
@@ -190,34 +186,33 @@ public class StockManager implements IStockService{
         return null;
     }
 
-public void createOrder(Order order){
+    public void createOrder(Order order){
         Product product = order.getProduct();
         int quantity = order.getQuantity();
 
-
         if(product.getStockQuantity() >= quantity){
             product.setStockQuantity(product.getStockQuantity() - quantity);
+            orders.add(order); // 👈 siparişi listeye ekliyoruz
             System.out.println("[INFO] Sipariş oluşturuldu. Ürün: "+ product.getName()+ " Miktar: "+ quantity +" Kalan stok: "+product.getStockQuantity());
         }
         else {
             System.out.println("[ERROR] Yetersiz stok! Sipariş oluşturulamadı.");
         }
+    }
 
-}
-
-public void saveSuppliersToFile(){
+    public void saveSuppliersToFile(){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(SUPPLIERS_FILE))){
             for (Supplier p : inventory.getSuppliers()) {
                 writer.write(
                         p.getSupplierId()+ "," + p.getCompanyName() + "," + p.getContactEmail());
-            writer.newLine();
+                writer.newLine();
             }
- System.out.println("[İNFO] Tedarikçiler dosyaya kaydedildi.");
+            System.out.println("[İNFO] Tedarikçiler dosyaya kaydedildi.");
         }
         catch (IOException e) {
             System.out.println("[ERROR] Tedarikçi dosyas yazılamadı!!");
         }
-}
+    }
 
     public void saveProductsToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(PRODUCTS_FILE))) {
@@ -320,14 +315,60 @@ public void saveSuppliersToFile(){
         }
     }
 
+    public void saveOrdersToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ORDERS_FILE))) {
+            for (Order o : orders) {
+                writer.write(
+                        o.getOrderId() + "," +
+                                o.getProduct().getId() + "," +
+                                o.getQuantity()
+                );
+                writer.newLine();
+            }
+            System.out.println("[INFO] Siparişler dosyaya kaydedildi.");
+        } catch (IOException e) {
+            System.out.println("[ERROR] Sipariş dosyası yazılamadı!");
+        }
+    }
 
+    public void loadOrdersFromFile() {
+        orders.clear();
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(ORDERS_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] p = line.split(",");
 
+                if (p.length == 3) {
+                    String orderId = p[0];
+                    String productId = p[1];
+                    int quantity = Integer.parseInt(p[2]);
 
+                    Product product = findProduct(productId);
+                    if (product != null) {
+                        orders.add(new Order(orderId, product, quantity));
+                    }
+                }
+            }
+            System.out.println("[INFO] Siparişler dosyadan yüklendi.");
+        } catch (IOException e) {
+            System.out.println("[WARN] Sipariş dosyası okunamadı.");
+        }
+    }
 
-
-
-
+    public void listOrders() {
+        if (orders.isEmpty()) {
+            System.out.println("Listelenecek sipariş yok.");
+            return;
+        } else {
+            System.out.println("ID | ÜRÜN | MİKTAR");
+            for (Order o : orders) {
+                System.out.println(
+                        o.getOrderId() + " | " +
+                                o.getProduct().getName() + " | " +
+                                o.getQuantity()
+                );
+            }
+        }
+    }
 }
-
-

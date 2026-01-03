@@ -1,3 +1,5 @@
+package app;
+
 import business.StockManager;
 import entities.Inventory;
 import entities.Product;
@@ -43,6 +45,7 @@ public class Main {
             System.out.println("║12 │ 🚚 Tedarikçi Ekle                 ║");
             System.out.println("║13 │ 📋 Tedarikçileri Listele          ║");
             System.out.println("║14 │ 📝 Sipariş Oluştur                ║");
+            System.out.println("║15 │ 📝 Siparişleri Listele            ║");
             System.out.println("╠═══════════════════════════════════════╣");
             System.out.println("║ 0 │ 🚪 Çıkış ve Kaydet                ║");
             System.out.println("╚═══════════════════════════════════════╝");
@@ -213,6 +216,11 @@ public class Main {
                             new Order("ORD-" + System.currentTimeMillis(), p, qty)
                     );
                     break;
+
+                case 15:
+                    stockManager.listOrders();
+                    break;
+
 
                 case 0:
                     stockManager.saveToFile();

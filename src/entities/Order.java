@@ -17,4 +17,8 @@ public class Order {
     //sipariş sınıfının get ve set metodlarını yazıyoruz
     public Product getProduct() { return product; }
     public int getQuantity() { return quantity; }
+    public String getOrderId() {
+        return orderId;
+    }
+
 }
