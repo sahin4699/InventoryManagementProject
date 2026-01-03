@@ -34,16 +34,15 @@ public class Main {
             System.out.println("║ 3 │ 🔄 Stok Güncelle                  ║");
             System.out.println("║ 4 │ ⚠️ Kritik Stok Kontrolü           ║");
             System.out.println("║ 5 │ 📊 Ortalama Ürün Fiyatı           ║");
-            System.out.println("║ 6 │ 💰 En Pahalı Ürün                 ║");
-            System.out.println("║ 7 │ 🪙 En Ucuz Ürün                   ║");
-            System.out.println("║ 8 │ 📦 Ürünleri Listele               ║");
-            System.out.println("║ 9 │ 📉 Ucuzdan Pahalıya Sırala        ║");
-            System.out.println("║10 │ 📈 Pahalıdan Ucuza Sırala         ║");
-            System.out.println("║11 │ 🧮 Toplam Envanter Değeri         ║");
-            System.out.println("║12 │ 🤖 Otomatik Stok Yenileme         ║");
-            System.out.println("║13 │ 🚚 Tedarikçi Ekle                 ║");
-            System.out.println("║14 │ 📋 Tedarikçileri Listele          ║");
-            System.out.println("║15 │ 📝 Sipariş Oluştur                ║");
+            System.out.println("║ 6 │ 💰 Fiyat Aralığına Göre Listele   ║");
+            System.out.println("║ 7 │ 📦 Ürünleri Listele               ║");
+            System.out.println("║ 8 │ 📉 Ucuzdan Pahalıya Sırala        ║");
+            System.out.println("║ 9 │ 📈 Pahalıdan Ucuza Sırala         ║");
+            System.out.println("║10 │ 🧮 Toplam Envanter Değeri         ║");
+            System.out.println("║11 │ 🤖 Otomatik Stok Yenileme         ║");
+            System.out.println("║12 │ 🚚 Tedarikçi Ekle                 ║");
+            System.out.println("║13 │ 📋 Tedarikçileri Listele          ║");
+            System.out.println("║14 │ 📝 Sipariş Oluştur                ║");
             System.out.println("╠═══════════════════════════════════════╣");
             System.out.println("║ 0 │ 🚪 Çıkış ve Kaydet                ║");
             System.out.println("╚═══════════════════════════════════════╝");
@@ -107,24 +106,39 @@ public class Main {
                     break;
 
                 case 6:
-                    Product max = stockManager.getMostExpensiveProduct();
-                    System.out.println(max != null
-                            ? max.getName() + " - " + max.getPrice()
-                            : "Ürün yok.");
+                    System.out.print("Minimum fiyat: ");
+                    double min = scanner.nextDouble();
+
+                    System.out.print("Maksimum fiyat: ");
+                    double max = scanner.nextDouble();
+
+                    boolean found = false;
+
+                    System.out.println("ID | AD | FİYAT | STOK");
+
+                    for (Product p : inventory.getProducts()) {
+                        if (p.getPrice() >= min && p.getPrice() <= max) {
+                            System.out.println(
+                                    p.getId() + " | " +
+                                            p.getName() + " | " +
+                                            p.getPrice() + " | " +
+                                            p.getStockQuantity()
+                            );
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        System.out.println("Bu fiyat aralığında ürün bulunamadı.");
+                    }
                     break;
+
 
                 case 7:
-                    Product min = stockManager.getCheapestProduct();
-                    System.out.println(min != null
-                            ? min.getName() + " - " + min.getPrice()
-                            : "Ürün yok.");
-                    break;
-
-                case 8:
                     stockManager.listProducts();
                     break;
 
-                case 9:
+                case 8:
                     stockManager.sortProductsByPriceAsc();
                     stockManager.listProducts();
                     break;
@@ -132,18 +146,18 @@ public class Main {
 
 
 
-                case 10:
+                case 9:
                     stockManager.sortProductsByPriceDesc();
                     stockManager.listProducts();
                     break;
 
 
-                case 11:
+                case 10:
                     System.out.println("Toplam Envanter Değeri: "
                             + stockManager.getTotalInventoryValue());
                     break;
 
-                case 12:
+                case 11:
                     System.out.print("Ürün ID: ");
                     String autoId = scanner.nextLine();
 
@@ -156,7 +170,7 @@ public class Main {
                     stockManager.autoRestock(autoId, autoThreshold, amount);
                     break;
 
-                case 13:
+                case 12:
                     System.out.print("Tedarikçi ID: ");
                     String sid = scanner.nextLine();
 
@@ -171,7 +185,7 @@ public class Main {
                     );
                     break;
 
-                case 14:
+                case 13:
                     System.out.println("--- TEDARİKÇİLER ---");
                     for (Supplier s : inventory.getSuppliers()) {
                         System.out.println(
@@ -182,7 +196,7 @@ public class Main {
                     }
                     break;
 
-                case 15:
+                case 14:
                     System.out.print("Ürün ID veya Adı: ");
                     String input = scanner.nextLine();
 

@@ -308,7 +308,7 @@ public void saveSuppliersToFile(){
             return;
         }
 
-        System.out.println("ID | AD | FİYAT | STOK | TEDARİKÇİ");
+        System.out.println("  ID | ÜRÜN ADI  | FİYAT   |STOK| TEDARİKÇİ");
         for (Product p : inventory.getProducts()) {
             System.out.println(
                     p.getId() + " | " +
