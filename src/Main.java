@@ -1,4 +1,3 @@
-import business.IStockService;
 import business.StockManager;
 import entities.Inventory;
 import entities.Product;
@@ -27,9 +26,9 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("╔══════════════════════════════════════╗");
+            System.out.println("╔═══════════════════════════════════════╗");
             System.out.println("║        📦 ENVANTER YÖNETİM SİSTEMİ    ║");
-            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("╠═══════════════════════════════════════╣");
             System.out.println("║ 1 │ ➕ Ürün Ekle                      ║");
             System.out.println("║ 2 │ 🗑️ Ürün Sil                       ║");
             System.out.println("║ 3 │ 🔄 Stok Güncelle                  ║");
@@ -37,16 +36,18 @@ public class Main {
             System.out.println("║ 5 │ 📊 Ortalama Ürün Fiyatı           ║");
             System.out.println("║ 6 │ 💰 En Pahalı Ürün                 ║");
             System.out.println("║ 7 │ 🪙 En Ucuz Ürün                   ║");
-            System.out.println("║ 8 │ 🧮 Toplam Envanter Değeri         ║");
-            System.out.println("║ 9 │ 🤖 Otomatik Stok Yenileme         ║");
-            System.out.println("║10 │ 🚚 Tedarikçi Ekle                 ║");
-            System.out.println("║11 │ 📋 Tedarikçileri Listele          ║");
-            System.out.println("║12 │ 📝 Sipariş Oluştur                ║");
-            System.out.println("╠══════════════════════════════════════╣");
+            System.out.println("║ 8 │ 📦 Ürünleri Listele               ║");
+            System.out.println("║ 9 │ 📉 Ucuzdan Pahalıya Sırala        ║");
+            System.out.println("║10 │ 📈 Pahalıdan Ucuza Sırala         ║");
+            System.out.println("║11 │ 🧮 Toplam Envanter Değeri         ║");
+            System.out.println("║12 │ 🤖 Otomatik Stok Yenileme         ║");
+            System.out.println("║13 │ 🚚 Tedarikçi Ekle                 ║");
+            System.out.println("║14 │ 📋 Tedarikçileri Listele          ║");
+            System.out.println("║15 │ 📝 Sipariş Oluştur                ║");
+            System.out.println("╠═══════════════════════════════════════╣");
             System.out.println("║ 0 │ 🚪 Çıkış ve Kaydet                ║");
-            System.out.println("╚══════════════════════════════════════╝");
+            System.out.println("╚═══════════════════════════════════════╝");
             System.out.print("Seçiminiz: ");
-
 
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -120,11 +121,29 @@ public class Main {
                     break;
 
                 case 8:
+                    stockManager.listProducts();
+                    break;
+
+                case 9:
+                    stockManager.sortProductsByPriceAsc();
+                    stockManager.listProducts();
+                    break;
+
+
+
+
+                case 10:
+                    stockManager.sortProductsByPriceDesc();
+                    stockManager.listProducts();
+                    break;
+
+
+                case 11:
                     System.out.println("Toplam Envanter Değeri: "
                             + stockManager.getTotalInventoryValue());
                     break;
 
-                case 9:
+                case 12:
                     System.out.print("Ürün ID: ");
                     String autoId = scanner.nextLine();
 
@@ -137,7 +156,7 @@ public class Main {
                     stockManager.autoRestock(autoId, autoThreshold, amount);
                     break;
 
-                case 10:
+                case 13:
                     System.out.print("Tedarikçi ID: ");
                     String sid = scanner.nextLine();
 
@@ -152,7 +171,7 @@ public class Main {
                     );
                     break;
 
-                case 11:
+                case 14:
                     System.out.println("--- TEDARİKÇİLER ---");
                     for (Supplier s : inventory.getSuppliers()) {
                         System.out.println(
@@ -163,11 +182,11 @@ public class Main {
                     }
                     break;
 
-                case 12:
-                    System.out.print("Ürün ID: ");
-                    String pid = scanner.nextLine();
+                case 15:
+                    System.out.print("Ürün ID veya Adı: ");
+                    String input = scanner.nextLine();
 
-                    Product p = stockManager.findProduct(pid);
+                    Product p = stockManager.findProduct(input);
                     if (p == null) {
                         System.out.println("[ERROR] Ürün bulunamadı!");
                         break;

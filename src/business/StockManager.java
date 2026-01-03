@@ -5,6 +5,8 @@ import entities.Supplier;
 import entities.Order;
 
 import java.io.*;
+import java.util.Comparator;
+
 
 
 
@@ -59,14 +61,22 @@ public class StockManager implements IStockService{
     }
 
     @Override
-    public Product findProduct(String productId) {
+    public Product findProduct(String input) {
         for (Product p : inventory.getProducts()) {
-            if (p.getId().equals(productId)) {
+
+            // ID ile arama
+            if (p.getId().equalsIgnoreCase(input)) {
+                return p;
+            }
+
+            // Ürün adı ile arama
+            if (p.getName().equalsIgnoreCase(input)) {
                 return p;
             }
         }
         return null;
     }
+
 
     @Override
     public void checkLowStock(int threshold) {
@@ -281,6 +291,41 @@ public void saveSuppliersToFile(){
             System.out.println("[WARN] Tedarikçi dosyası okunamadı.");
         }
     }
+
+    public void sortProductsByPriceAsc() {
+        inventory.getProducts()
+                .sort(Comparator.comparingDouble(Product::getPrice));
+    }
+
+    public void sortProductsByPriceDesc() {
+        inventory.getProducts()
+                .sort(Comparator.comparingDouble(Product::getPrice).reversed());
+    }
+
+    public void listProducts() {
+        if (inventory.getProducts().isEmpty()) {
+            System.out.println("Listelenecek ürün yok.");
+            return;
+        }
+
+        System.out.println("ID | AD | FİYAT | STOK | TEDARİKÇİ");
+        for (Product p : inventory.getProducts()) {
+            System.out.println(
+                    p.getId() + " | " +
+                            p.getName() + " | " +
+                            p.getPrice() + " | " +
+                            p.getStockQuantity() + " | " +
+                            (p.getSupplier() != null ? p.getSupplier().getCompanyName() : "-")
+            );
+        }
+    }
+
+
+
+
+
+
+
 
 
 }
