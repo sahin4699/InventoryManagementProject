@@ -1,0 +1,75 @@
+@startuml
+' --- GÖRSEL TASARIM AYARLARI (MODERN & COOL) ---
+skinparam handwritten false
+skinparam shadow true
+skinparam defaultFontName "Segoe UI"
+skinparam usecase {
+    BackgroundColor White
+    BorderColor #2C3E50
+    ArrowColor #2C3E50
+    FontColor #2C3E50
+    FontSize 14
+}
+skinparam actor {
+    BorderColor #2C3E50
+    FontName "Segoe UI Bold"
+}
+skinparam package {
+    BackgroundColor #F4F6F7
+    BorderColor #BDC3C7
+    FontColor #7F8C8D
+    FontStyle Bold
+}
+skinparam arrow {
+    Color #34495E
+    Thickness 1.2
+}
+
+left to right direction
+title Envanter ve Sipariş Yönetim Sistemi
+
+' --- AKTÖRLER ---
+actor "Yönetici" as Admin #E74C3C
+actor "Müşteri" as Customer #3498DB
+
+rectangle "Yönetim Sistemi" {
+
+    ' --- SOL KISIM: YÖNETİCİNİN YAPTIKLARI (Inventory.java) ---
+    rectangle "Envanter Yönetimi" #FDEDEC {
+        usecase "Ürün Ekle" as UC_Add
+        usecase "Ürün Sil" as UC_Remove
+        usecase "Ürün Ara / Getir" as UC_Find
+        usecase "Stok Güncelle" as UC_Update
+        usecase "Kritik Stok Kontrolü" as UC_LowStock
+    }
+
+    ' --- SAĞ KISIM: MÜŞTERİNİN YAPTIKLARI (Order.java) ---
+    rectangle "Sipariş Yönetimi" #EBF5FB {
+        usecase "Sipariş Oluştur" as UC_Order
+        usecase "Siparişi Tamamla" as UC_Complete
+        usecase "Siparişi İptal Et" as UC_Cancel
+    }
+}
+
+' --- YÖNETİCİ BAĞLANTILARI ---
+Admin --> UC_Add
+Admin --> UC_Remove
+Admin --> UC_Find
+Admin --> UC_Update
+Admin --> UC_LowStock
+
+' --- MÜŞTERİ BAĞLANTILARI ---
+Customer --> UC_Order
+Customer --> UC_Complete
+Customer --> UC_Cancel
+
+' --- NOTLAR ---
+note right of Admin
+  Stokları yönetir.
+end note
+
+note right of Customer
+  Sipariş işlemlerini yapar.
+end note
+
+@enduml
