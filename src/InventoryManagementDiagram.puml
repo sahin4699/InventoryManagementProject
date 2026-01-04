@@ -1,0 +1,109 @@
+@startuml
+
+left to right direction
+' Paketler
+package entities {
+    class Inventory {
+        -List<Product> products
+        -List<Supplier> suppliers
+        -List<Order> orders
+        +Inventory()
+        +getProducts(): List<Product>
+        +setProducts(List<Product>)
+        +getSuppliers(): List<Supplier>
+        +getOrders(): List<Order>
+    }
+
+    class Product {
+        -String id
+        -String name
+        -double price
+        -int stockQuantity
+        -Supplier supplier
+        +Product(String, String, double, int, Supplier)
+        +getId(): String
+        +setName(String)
+        +getStockQuantity(): int
+        +setStockQuantity(int)
+        +getPrice(): double
+        +setPrice(double)
+        +getName(): String
+        +getSupplier(): Supplier
+    }
+
+    class Supplier {
+        -String supplierId
+        -String companyName
+        -String contactEmail
+        +Supplier(String, String, String)
+        +getCompanyName(): String
+        +setCompanyName(String)
+        +getContactEmail(): String
+        +setContactEmail(String)
+        +getSupplierId(): String
+    }
+
+    class Order {
+        -String orderId
+        -Product product
+        -int quantity
+        +Order(String, Product, int)
+        +getProduct(): Product
+        +getQuantity(): int
+        +getOrderId(): String
+    }
+}
+
+package business {
+    interface IStockService {
+        +addProduct(Product)
+        +removeProduct(String)
+        +updateStock(String, int)
+        +findProduct(String): Product
+        +checkLowStock(int)
+        +autoRestock(String, int, int)
+        +getAveragePrice(): double
+        +getMostExpensiveProduct(): Product
+        +getCheapestProduct(): Product
+        +getTotalInventoryValue(): double
+        +saveToFile()
+        +loadFromFile()
+    }
+
+    class StockManager {
+        -Inventory inventory
+        -List<Order> orders
+        +StockManager(Inventory)
+        +addProduct(Product)
+        +removeProduct(String)
+        +updateStock(String, int)
+        +findProduct(String): Product
+        +checkLowStock(int)
+        +autoRestock(String, int, int)
+        +getAveragePrice(): double
+        +getMostExpensiveProduct(): Product
+        +getCheapestProduct(): Product
+        +getTotalInventoryValue(): double
+        +saveToFile()
+        +loadFromFile()
+        +addSupplier(Supplier)
+        +findSupplier(String): Supplier
+        +createOrder(Order)
+        +listProducts()
+        +listOrders()
+        +sortProductsByPriceAsc()
+        +sortProductsByPriceDesc()
+    }
+}
+
+' İlişkiler
+Inventory "1" -- "*" Product
+Inventory "1" -- "*" Supplier
+Inventory "1" -- "*" Order
+
+StockManager ..|> IStockService
+
+Product "1" --> "0..1" Supplier
+Order "1" --> "1" Product
+
+@enduml
