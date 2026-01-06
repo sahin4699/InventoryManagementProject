@@ -89,23 +89,21 @@ public class StockManager implements IStockService{
         }
     }
 
-    @Override
-    public void autoRestock(String productId, int threshold, int amount) {
-        Product product = findProduct(productId);
+    public void autoRestock(Product product, int threshold, int amount) {
 
-        if (product != null) {
-            if (product.getStockQuantity() < threshold) {
-                int newQuantity = product.getStockQuantity() + amount;
-                product.setStockQuantity(newQuantity);
-                System.out.println(product.getName() + " stoğu azaldı. Otomatik olarak " + amount + " adet eklendi.");
-                System.out.println("Yeni Stok: " + newQuantity);
-            } else {
-                System.out.println("Stok yeterli, yenilemeye gerek yok.");
-            }
-        } else {
-            System.out.println("Ürün bulunamadı!");
+        if (product.getStockQuantity() < threshold) {
+            int oldStock = product.getStockQuantity();
+            product.setStockQuantity(oldStock + amount);
+
+            System.out.println(
+                    "[AUTO] " + product.getName()
+                            + " stoğu kritikti (" + oldStock + "). "
+                            + amount + " adet otomatik eklendi. "
+                            + "Yeni stok: " + product.getStockQuantity()
+            );
         }
     }
+
 
     @Override
     public double getAveragePrice() {
@@ -191,14 +189,28 @@ public class StockManager implements IStockService{
         int quantity = order.getQuantity();
 
         if(product.getStockQuantity() >= quantity){
+
+            // stok düşür
             product.setStockQuantity(product.getStockQuantity() - quantity);
-            orders.add(order); // 👈 siparişi listeye ekliyoruz
-            System.out.println("[INFO] Sipariş oluşturuldu. Ürün: "+ product.getName()+ " Miktar: "+ quantity +" Kalan stok: "+product.getStockQuantity());
-        }
-        else {
+
+            // siparişi kaydet
+            orders.add(order);
+
+            System.out.println(
+                    "[INFO] Sipariş oluşturuldu. Ürün: "
+                            + product.getName()
+                            + " | Miktar: " + quantity
+                            + " | Kalan stok: " + product.getStockQuantity()
+            );
+
+            // 👇 GERÇEK OTOMATİK STOK YENİLEME
+            autoRestock(product, 5, 20);
+
+        } else {
             System.out.println("[ERROR] Yetersiz stok! Sipariş oluşturulamadı.");
         }
     }
+
 
     public void saveSuppliersToFile(){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(SUPPLIERS_FILE))){

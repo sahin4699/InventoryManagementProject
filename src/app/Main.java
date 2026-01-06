@@ -41,11 +41,10 @@ public class Main {
             System.out.println("║ 8 │ 📉 Ucuzdan Pahalıya Sırala        ║");
             System.out.println("║ 9 │ 📈 Pahalıdan Ucuza Sırala         ║");
             System.out.println("║10 │ 🧮 Toplam Envanter Değeri         ║");
-            System.out.println("║11 │ 🤖 Otomatik Stok Yenileme         ║");
-            System.out.println("║12 │ 🚚 Tedarikçi Ekle                 ║");
-            System.out.println("║13 │ 📋 Tedarikçileri Listele          ║");
-            System.out.println("║14 │ 📝 Sipariş Oluştur                ║");
-            System.out.println("║15 │ 📝 Siparişleri Listele            ║");
+            System.out.println("║11 │ 🚚 Tedarikçi Ekle                 ║");
+            System.out.println("║12 │ 📋 Tedarikçileri Listele          ║");
+            System.out.println("║13 │ 📝 Sipariş Oluştur                ║");
+            System.out.println("║14 │ 📝 Siparişleri Listele            ║");
             System.out.println("╠═══════════════════════════════════════╣");
             System.out.println("║ 0 │ 🚪 Çıkış ve Kaydet                ║");
             System.out.println("╚═══════════════════════════════════════╝");
@@ -160,20 +159,8 @@ public class Main {
                             + stockManager.getTotalInventoryValue());
                     break;
 
+
                 case 11:
-                    System.out.print("Ürün ID: ");
-                    String autoId = scanner.nextLine();
-
-                    System.out.print("Eşik değer: ");
-                    int autoThreshold = scanner.nextInt();
-
-                    System.out.print("Eklenecek miktar: ");
-                    int amount = scanner.nextInt();
-
-                    stockManager.autoRestock(autoId, autoThreshold, amount);
-                    break;
-
-                case 12:
                     System.out.print("Tedarikçi ID: ");
                     String sid = scanner.nextLine();
 
@@ -188,7 +175,7 @@ public class Main {
                     );
                     break;
 
-                case 13:
+                case 12:
                     System.out.println("--- TEDARİKÇİLER ---");
                     for (Supplier s : inventory.getSuppliers()) {
                         System.out.println(
@@ -199,7 +186,7 @@ public class Main {
                     }
                     break;
 
-                case 14:
+                case 13:
                     System.out.print("Ürün ID veya Adı: ");
                     String input = scanner.nextLine();
 
@@ -217,7 +204,7 @@ public class Main {
                     );
                     break;
 
-                case 15:
+                case 14:
                     stockManager.listOrders();
                     break;
 

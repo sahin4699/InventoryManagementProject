@@ -4,6 +4,7 @@ import entities.Product;
 import entities.Supplier;
 import entities.Order;
 
+
 public interface IStockService {
 
     // Ürün ile ilgili işlemler
@@ -12,7 +13,7 @@ public interface IStockService {
     void updateStock(String productId, int newQuantity);
     Product findProduct(String input);
     void checkLowStock(int threshold);
-    void autoRestock(String productId, int threshold, int amount);
+    void autoRestock(Product product, int threshold, int amount);
     double getAveragePrice();
     Product getMostExpensiveProduct();
     Product getCheapestProduct();
